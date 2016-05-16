@@ -25,6 +25,9 @@ import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.PagingQueryProvider;
 import org.springframework.batch.item.database.support.HsqlPagingQueryProvider;
@@ -52,8 +55,9 @@ public class JdbcPagingItemReaderTests {
         queryProvider.setSelectClause("select ID, NAME");
         queryProvider.setFromClause("from TEST");
         queryProvider.setWhereClause("where NAME <> 'foo'");
-        queryProvider.setSortKey("ID");
-        // call init to imitate spring context startup behaviour
+        Map<String, Order> sortKeys = new LinkedHashMap<String, Order>();
+        sortKeys.put("ID", Order.ASCENDING);
+        queryProvider.setSortKeys(sortKeys);        // call init to imitate spring context startup behaviour
         queryProvider.init(dataSource);
 
         // setup reader
